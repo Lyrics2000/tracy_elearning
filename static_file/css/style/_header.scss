@@ -1,0 +1,65 @@
+
+.nav-bar {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+
+
+    .logo {
+        h1{
+            width: 50px;
+            cursor: pointer;
+            margin: 35px 0;
+            color: $white_color;
+        }
+
+    }
+
+    nav{
+        ul {
+             li{
+                 list-style: none;
+                 display: inline-block;
+                 margin-right: 30px;
+                 
+
+                 a{
+                     text-decoration: none;
+                     color: $color_text;
+                     font-size: 12px;
+                     padding: 5px 2px;
+
+                     &:hover{
+                         color: $white_color;
+                         border-bottom: 3px solid $border_color ;
+                     }
+
+                 }
+             }
+        }
+    }
+
+    .contact-us {
+        a {
+            text-decoration: none;
+            color: $white_color;
+            padding: 14px 20px;
+            background: $anchor_color;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 900;
+            transition: .3s all ease;
+            cursor: pointer;
+
+            &:hover{
+                background: $anchor_hover_color ;
+            }
+
+
+        }
+    }
+
+}
+
