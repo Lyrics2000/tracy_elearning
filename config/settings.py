@@ -49,7 +49,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
         os.path.join(BASE_DIR,'homepage/templates'),
-        os.path.join(BASE_DIR,'auth/templates')
+        os.path.join(BASE_DIR,'auth/templates'),
+        os.path.join(BASE_DIR/'templates')
  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -64,6 +65,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+AUTH_USER_MODEL = 'account.User'
+
 
 
 # Database

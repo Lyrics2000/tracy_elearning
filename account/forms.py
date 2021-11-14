@@ -3,7 +3,7 @@ from django import forms
 class SignINForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(
         attrs={
-            "name":"emailaddress", "type":"text" , "placeholder":"Username", "id":"username",
+            "name":"emailaddress", "type":"email" , "placeholder":"Email", "id":"username",
              "required":""
 
         }
@@ -15,6 +15,8 @@ class SignINForm(forms.Form):
             "required":""}
         )
     )
+
+    
 
 
 class SignUpForm(forms.Form):
@@ -37,6 +39,22 @@ class SignUpForm(forms.Form):
     last_name = forms.CharField(widget=forms.TextInput(
         attrs={
             "name":"emailaddress", "type":"text" , "placeholder":"Last Name", "id":"username",
+             "required":""
+
+        }
+    ))
+
+    phone = forms.CharField(widget=forms.TextInput(
+        attrs={
+            "name":"phone", "type":"text" , "placeholder":"Phone Number", "id":"phone",
+             "required":""
+
+        }
+    ))
+
+    type = forms.CharField(widget=forms.TextInput(
+        attrs={
+            "name":"type", "type":"text" , "placeholder":"Type ...", "id":"type",
              "required":""
 
         }

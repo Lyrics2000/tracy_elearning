@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.base import Model
 from django.utils.translation import activate
-from django.contrib.auth.models import User
+from account.models import User
 from django.utils.timezone import now
 import random
 import os
