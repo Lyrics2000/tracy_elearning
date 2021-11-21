@@ -8,17 +8,14 @@
                         <div class="row">
                           
                           {% if courses %}
-                          {% if all_users %}
                           {% for ii in courses %}
-                          {% for jj in all_users  %}
-                          {% if ii.teacher_id.id == jj.id %}
                             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="ed_mostrecomeded_course">
                                     <div class="ed_item_img">
                                         <img src="{{ii.thumbnail.url}}" alt="item1" class="img-responsive">
                                     </div>
                                     <div class="ed_item_description ed_most_recomended_data">
-                                        <h4><a href="course_single.html">{{ii.title}}</a></h4>
+                                        <h4><a href="{{ii.get_absolute_url}}">{{ii.title}}</a></h4>
                                         <div class="row">
                                             <div class="ed_rating">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
@@ -43,59 +40,98 @@
                                         </div>
                                         <div class="course_detail">
                                             <div class="course_faculty">
-                                                <img src="{% static  'assets/images/kidscamp/content/team_2.jpg' %}" alt=""> <a href="javascript:void(0);">{{jj.username}}</a>
+                                                <img src="{% static  'assets/images/kidscamp/content/team_2.jpg' %}" alt=""> <a href="javascript:void(0);">{{ii.teacher_id.username}}</a>
                                             </div>
                                         </div>
                                         <p>Project-Based Learning is a flexible tool for framing given academic standards into curriculum flexible tool for framing.</p>
-                                        {% if user_type %}
-                                        {% if user_type == "Student" %}
+                                    
+                                        {% if all_enrollmet %}
+                                        {% for mkli in all_enrollmet %}
+                                        {% if mkli.courses_id.id == ii.id %}
+                                            {% if  mkli.enrolled %}
+                                                    <form method="POST" action="{% url 'homepage:get_uninvolved' %}">
+                                                    <h1> one</h1>
+                                                        {% csrf_token %}
+
+                                                        <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                        
+                                                        <button type="submit" class="btn btn-danger">Remove Enrollment</button>
+                                                    </form>
+
+
+                                            {% else %}
+                                                    <form method="POST" action="{% url 'homepage:get_involved' %}">
+                                                    <h1> two </h1>
+                                                        {% csrf_token %}
+
+                                                        <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                        
+                                                        <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                    </form>
                                         
-                                        {% comment %} check enrolled user {% endcomment %}
-                                        {% if all_enrollmet %} 
-                                        {% for inn in all_enrollment %} 
-                    
-                                          {% if inn.courses_id.id == ii.id  %}
-
-                                          
-                                          
-                                        <form method="POST" action="{% url 'homepage:get_involved' %}">
-                                            {% csrf_token %}
- 
-                                            <input name="course_id" type="hidden" value="{{ii.id}}" >
-                                            
-                                            <button type="submit" class="btn btn-danger">Remove Enrollment</button>
-                                        </form>
+                                        
+                                        
+                                        
+                                        
+                                                {% endif %}
 
 
-
-                                          {% endif %}
-
-                                        {% endfor %}
 
                                         {% else %}
-
                                         <form method="POST" action="{% url 'homepage:get_involved' %}">
-                                            {% csrf_token %}
+                                          <h1> three </h1>
+                                                    {% csrf_token %}
 
-                                            <input name="course_id" type="hidden" value="{{ii.id}}" >
-                                            
-                                            <button type="submit" class="btn btn-success">Enroll Now</button>
-                                        </form>
+                                                    <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                    
+                                                    <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                </form>
 
-                                        {% endif %}
+
+
+                                        
                                         
                                         {% endif %}
 
-                                        {% comment %} end check enrolled user {% endcomment %}
+                                      
+                                        
+                                        
+                                        
+                                        {% endfor %}
+
+                                     
+
+
+                                            {% else %}
+
+                                            
+
+                                                <form method="POST" action="{% url 'homepage:get_involved' %}">
+                                                  <h1> four </h1>
+                                                    {% csrf_token %}
+
+                                                    <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                    
+                                                    <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                </form>
+                                        
                                         {% endif %}
+
+
+                                        
+                                        {% comment %} check enrolled user {% endcomment %}
+
+                                          
+                                   
+
+
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
+                     
                         {% endfor %}
-                        {% endfor %}
                         {% endif %}
-                        {% endif %}
+                   
                             
                            
                             

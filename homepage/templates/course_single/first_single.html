@@ -1,0 +1,128 @@
+{% load static %}
+  <div class="ed_graysection ed_course_single ed_toppadder80 ed_bottompadder80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="ed_course_single_item">
+                            <div class="ed_course_single_image">
+
+                            <iframe width="560" height="315" src="{{object.video_url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                               
+                            </div>
+                            <div class="ed_course_single_info">
+                                <h2>{{object.title}}</h2>
+                                
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                        <div class="course_detail">
+                                            <div class="course_faculty">
+                                                <img src="{% static 'assets/images/kidscamp/content/team_1.jpg' %}" alt=""> <a href="javascript:void(0);">{{object.teacher_id.username}}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12 pull-right text-right">
+                                        <div class="ed_course_duration">
+                                            time duration: 75 days
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ed_course_single_tab">
+                                <div role="tabpanel">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation"><a class="active" href="#description" aria-controls="description" role="tab" data-bs-toggle="tab"> short description</a></li>
+                                        <li role="presentation"><a href="#students" aria-controls="students" role="tab" data-bs-toggle="tab">students</a></li>
+                                        <li role="presentation"><a href="#news" aria-controls="news" role="tab" data-bs-toggle="tab">Full Description</a></li>
+                                        <li role="presentation"><a href="#events" aria-controls="events" role="tab" data-bs-toggle="tab">Language</a></li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="description">
+                                            <div class="ed_course_tabconetent">
+                                                <h2>about course</h2>
+                                                <p style="color:black;">{{object.short_description}}</p>
+
+                    
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="students">
+                                            <div class="ed_inner_dashboard_info">
+                                                <div class="ed_course_single_info">
+                                                    <h2>student enrolled :- <span></span></h2>
+                                                  
+                                                  {% if all_enrollement %}
+                                                  {% for als in all_enrollement  %}
+                                                  {% if als.courses_id.id ==  object.id %}
+                                                    <div class="ed_add_students">
+                                                        <img src="{% static 'assets/images/kidscamp/content/S01.jpg' %}" alt="">
+                                                        <span>{{als.user_id.username}}</span>
+                                                        <p>new student</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% endfor %}
+
+                                                {% else %}
+                                                <h1> No Student Enrolled Yet </h1>
+                                                {% endif %}
+                                                
+                                                    
+                                                    
+                                                    
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div class="row">
+                                                            <div class="ed_blog_bottom_pagination ed_toppadder40">
+                                                                <nav>
+                                                                    <ul class="pagination">
+                                                                        <li><a href="javascript:void(0);">1</a></li>
+                                                                        <li><a href="javascript:void(0);">2</a></li>
+                                                                        <li><a href="javascript:void(0);">3</a></li>
+                                                                        <li class="active"><a href="javascript:void(0);">Next <span class="sr-only">(current)</span></a></li>
+                                                                    </ul>
+                                                                </nav>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="news">
+                                            <div class="ed_course_tabconetent">
+                                                <h2>course Full Description</h2>
+                                                
+                                                <p style="color:black;">{{object.description}}</p>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="events">
+                                            <div class="ed_course_single_info">
+                                                <h2>Course Language</h2>
+                                                <p style="color:black;">{{object.language}}</p>
+                                                
+                                                <!--tab End-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--tab End-->
+                        </div>
+                        <div class="ed_time_executor ed_toppadder40">
+                            <ul>
+                                <li><a href="#">lessons</a> <span>estimated time</span></li>
+                                {% if all_lessons %}
+                                {% for mk in all_lessons  %}
+                                {% if mk.course.id == object.id %}
+                                <li><a href="{{mk.get_absolute_url}}">{{mk.title}}</a> <span>{{mk.duration}} Minuts</span></li>
+
+                                {% endif %}
+                                {% endfor %}
+                               
+                                {% endif %}
+                               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -5,7 +5,10 @@ from account.models import User
 from django.utils.timezone import now
 import random
 import os
+from django.db.models.signals import pre_save
+from django.shortcuts import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
+from config.utils import unique_slug_generator,category_unique_slug_generator
 
 
 
@@ -50,6 +53,14 @@ class ClassCategory(BaseModel):
     def __str__(self):
         return self.class_title
 
+def product_presave_reciver(sender, instance, *args,**kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance)
+
+
+pre_save.connect(product_presave_reciver,sender = ClassCategory)
+
+
 
 class Courses(BaseModel):
     title =  models.CharField(max_length=255)
@@ -61,9 +72,23 @@ class Courses(BaseModel):
     thumbnail = models.ImageField(upload_to='thumbnails/') 
     video_url = models.URLField()
     is_published = models.BooleanField(default=True)
+    slug = models.SlugField(blank=True,unique=True)
 
     def __str__(self):
         return self.title
+
+
+    def get_absolute_url(self):
+        return reverse("homepage:single_course", kwargs={
+            'slug': self.slug
+        })
+
+def product_presave_reciver(sender, instance, *args,**kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance)
+
+
+pre_save.connect(product_presave_reciver,sender = Courses)
 
 
 class Enrolment(BaseModel):
@@ -80,10 +105,17 @@ class Lessons(BaseModel):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=100)
     duration = models.FloatField(validators=[MinValueValidator(0.30), MaxValueValidator(30.00)])
+    lesson_body =  models.TextField(blank=True,null=True)
     video_url = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=255,unique=True,null=True)
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("homepage:single_lesson", kwargs={
+            'slug': self.slug
+        })
 
 
 class LessonFiles(BaseModel):

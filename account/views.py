@@ -24,7 +24,7 @@ def index(request):
         if user is not None:
         
             login(request,user)
-            return redirect("homepage:dashboard")
+            return redirect("homepage:homepage")
         else:
             pass
     return render(request,'signin.html',context)
@@ -61,6 +61,6 @@ def signup(request):
                 userr = authenticate(request,username = email, password = password )
                 if userr is not None:
                     login(request,userr)
-                    return redirect("homepage:dashboard")
+                    return redirect("homepage:homepage")
 
     return render(request,'signup.html',context)

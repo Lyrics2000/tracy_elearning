@@ -2,6 +2,7 @@ from django.db import models
 import os
 import random
 
+
 # Create your models here.
 
 
