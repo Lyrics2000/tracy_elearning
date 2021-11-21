@@ -8,7 +8,8 @@ courses,
 lesson,get_involved,
 get_uninvolved,
 CourseDetailView,
-LessonDetailView)
+LessonDetailView,
+courses_class_filter)
 
 app_name = "homepage"
 
@@ -21,7 +22,8 @@ urlpatterns = [
     path('get_involved/',get_involved,name="get_involved"),
     path('get_uninvolved',get_uninvolved,name="get_uninvolved"),
     path('single_course/<slug>/',CourseDetailView.as_view(),name="single_course"),
-    path('single_lesson/<slug>/',LessonDetailView.as_view(),name="single_lesson")
+    path('single_lesson/<slug>/',LessonDetailView.as_view(),name="single_lesson"),
+    path('course_class_filter/<slug>/',courses_class_filter,name="course_class_filter")
 ]
 
 

@@ -1,3 +1,4 @@
+from django.core.validators import slug_re
 from django.shortcuts import redirect, render
 from account.models import User
 from django.forms.models import model_to_dict
@@ -14,18 +15,38 @@ from django.views.generic import DetailView,View,ListView
 # Create your views here.
 
 def index(request):
-    images =  ScrollingIMages.objects.all()
-    about =  AboutUs.objects.all()
-    all_courses = Courses.objects.all()
-    all_enrolment =  Enrolment.objects.all()
+    if request.user.is_authenticated:
+        images =  ScrollingIMages.objects.all()
+        about =  AboutUs.objects.all()
+        all_courses = Courses.objects.all()
+        all_enrolment =  Enrolment.objects.all()
 
 
-    context ={
-        'image' :  images,
-        'about' : about,
-        'all_courses' :  all_courses
-    }
-    return render(request,'index.html',context)
+        context ={
+            'image' :  images,
+            'about' : about,
+            'all_courses' :  all_courses,
+            'all_enrollmet' : all_enrolment
+
+        }
+        return render(request,'index.html',context)
+
+    else:
+        images =  ScrollingIMages.objects.all()
+        about =  AboutUs.objects.all()
+        all_courses = Courses.objects.all()
+        
+
+
+        context ={
+            'image' :  images,
+            'about' : about,
+            'all_courses' :  all_courses,
+            
+
+        }
+        return render(request,'index.html',context)
+
 
 def mainpage(request):
     return render(request,'mainpage.html',{})
@@ -40,8 +61,6 @@ def about(request):
 
 
 def courses(request):
-
-
     if request.user.is_authenticated:
         user =  request.user.id
         # get user with the id
@@ -68,9 +87,11 @@ def courses(request):
     else:
         courses =  Courses.objects.all()
         all_classes =  Classes.objects.all()
-
+      
+        all_users =  User.objects.all()
+        all_enrolment =  Enrolment.objects.all()
+        all_classes =  Classes.objects.all()
         context = {
-            
             'courses' :  courses,
             'all_classes' :  all_classes
             
@@ -80,7 +101,7 @@ def courses(request):
 
     
         
-        return render(request,'courses.html')
+        
 
 
 def lesson(request):
@@ -149,9 +170,49 @@ class LessonDetailView(DetailView):
         context['lesson_files'] =  all_lesson_files
         context['assignemt_files'] =  assigments
 
-       
-        
-        
-        return context
+
+def courses_class_filter(request, slug):
+    if request.user.is_authenticated:
+        user =  request.user.id
+        # get user with the id
+        obj = User.objects.get(id=user)
+        dict_user =  model_to_dict(obj)
+        user_type = dict_user['type']
+        courses =  Courses.objects.all()
+        all_users =  User.objects.all()
+        all_enrolment =  Enrolment.objects.all()
+        print(slug)
+        filtered_classes =  Classes.objects.get(slug= slug)
+        all_classes =  Classes.objects.all()
+
+        context = {
+            'user_type' : user_type,
+            'courses' :  courses,
+            'all_users' :  all_users,
+            'all_enrollmet' :  all_enrolment,
+            'all_classes' :  all_classes,
+            'filtered_classes' :  filtered_classes
+            
+        }
+
+        return render(request,'classes_filter.html',context)
+
+    
+    else:
+        courses =  Courses.objects.all()
+        all_classes =  Classes.objects.all()
+        filtered_classes =  Classes.objects.get(slug= slug)
+
+        context = {
+            
+            'courses' :  courses,
+            'all_classes' :  all_classes,
+            'filtered_classes ' :  filtered_classes
+            
+        }
+
+        return render(request,'classes_filter.html',context)
+
+    
 
 

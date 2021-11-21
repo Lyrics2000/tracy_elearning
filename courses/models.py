@@ -39,6 +39,12 @@ class BaseModel(models.Model):
 class Classes(BaseModel):
     class_name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=255,unique=True,blank=True,null=True)
+
+    def get_absolute_url(self):
+        return reverse("homepage:course_class_filter", kwargs={
+            'slug': self.slug
+        })
 
 
     def __str__(self):
@@ -52,6 +58,8 @@ class ClassCategory(BaseModel):
 
     def __str__(self):
         return self.class_title
+
+    
 
 def product_presave_reciver(sender, instance, *args,**kwargs):
     if not instance.slug:

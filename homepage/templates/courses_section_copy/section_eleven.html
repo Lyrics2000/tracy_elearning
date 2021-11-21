@@ -2,6 +2,7 @@
 
  <!-- Section eleven start -->
         <div class="ed_courses ed_toppadder80 ed_bottompadder80 with-left-widgets">
+        <h2> filter for : <span> {{filtered_classes.class_name}} </span> </h2>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 col-md-8 col-sm-12">
@@ -9,6 +10,8 @@
                           
                           {% if courses %}
                           {% for ii in courses %}
+                          
+                          {% if ii.course_category.class_id.id == filtered_classes.id  %}
                             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="ed_mostrecomeded_course">
                                     <div class="ed_item_img">
@@ -21,7 +24,7 @@
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                                                           
+                                                            <
                                                         </div>
                                                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                                            
@@ -29,7 +32,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                                                    
+                                                  
                                                 </div>
                                             </div>
                                         </div>
@@ -108,23 +111,27 @@
                                         {% endif %}
 
 
-                                        {% endif %}
-
-
                                         
                                         {% comment %} check enrolled user {% endcomment %}
 
                                           
                                    
-
+                                    {% endif %}
 
                                     </div>
                                 </div>
                             </div>
-                      
+                        
+                        {% endif %}
                         {% endfor %}
                         {% endif %}
 
+                       
+                   
+                            
+                           
+                            
+                            
                             <div class="col-lg-12">
                                 <div class="ed_blog_bottom_pagination">
                                     <nav>
