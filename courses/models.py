@@ -7,7 +7,7 @@ import random
 import os
 from django.db.models.signals import pre_save
 from django.shortcuts import reverse
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
 from config.utils import unique_slug_generator,category_unique_slug_generator
 
 
@@ -116,7 +116,7 @@ class Enrolment(BaseModel):
 class Lessons(BaseModel):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=100)
-    duration = models.FloatField(validators=[MinValueValidator(0.30), MaxValueValidator(30.00)])
+    duration = models.CharField(max_length=255,blank=True,null=True)
     lesson_body =  models.TextField(blank=True,null=True)
     video_url = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255,unique=True,null=True)

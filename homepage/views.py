@@ -15,6 +15,13 @@ LessonAssignmentFiles
 )
 from django.views.generic import DetailView,View,ListView
 
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+
 # Create your views here.
 
 def index(request):
@@ -333,7 +340,50 @@ def lesson_upload_ff(request):
 
 
 def lesson_file_upload(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            file_name =  request.POST.get('file_name')
+            file_description =  request.POST.get('file_description')
+            file = request.FILES['file']
+            lesson_id =  request.session['class_lesson_id']
+            course_obj =  Lessons.objects.get(id =  lesson_id)
+            slug =  str(uuid.uuid4().hex) + str(file_name).strip().replace(" ","_")
+            LessonFiles.objects.create(lesson = course_obj,
+            file_name = file_name,
+            file_description =  file_description,
+            zip_file_upload = file
+            )
+            return redirect("homepage:upload_assingment_file")
+
     return render(request,'upload_lesson_file.html')
+
+
+def upload_assingment_file(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            user =  request.user
+            file_name =  request.POST.get('file_name')
+            file_description =  request.POST.get('file_description')
+            file = request.FILES['file']
+            lesson_id =  request.session['class_lesson_id']
+            course_obj =  Lessons.objects.get(id =  lesson_id)
+            slug =  str(uuid.uuid4().hex) + str(file_name).strip().replace(" ","_")
+            LessonAssignmentFiles.objects.create(lesson = course_obj,
+            file_name = file_name,
+            file_description =  file_description,
+            zip_file_upload = file
+            )
+            current_site = get_current_site(request)
+            email_subject = 'Successfull Uploaded'
+            message = render_to_string('successfull_uploaded.html', {
+            'user': user,
+            'domain': current_site.domain
+            })
+            to_email = user.email
+            email = EmailMessage(email_subject, message, to=[to_email])
+            email.send()
+            return redirect("/")
+    return render(request,'upload_lesson_assignment.html')
 
 
 
