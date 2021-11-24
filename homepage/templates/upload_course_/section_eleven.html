@@ -1,0 +1,184 @@
+{% load static %}
+
+ <!-- Section eleven start -->
+        <div class="ed_courses ed_toppadder80 ed_bottompadder80 with-left-widgets">
+        <h2> filter for : <span> {{filtered_classes.class_name}} </span> </h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8 col-sm-12">
+                        <div class="row">
+                          
+                          {% if courses %}
+                          {% for ii in courses %}
+                          
+                          {% if ii.course_category.class_id.id == filtered_classes.id  %}
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="ed_mostrecomeded_course">
+                                    <div class="ed_item_img">
+                                        <img src="{{ii.thumbnail.url}}" alt="item1" class="img-responsive">
+                                    </div>
+                                    <div class="ed_item_description ed_most_recomended_data">
+                                        <h4><a href="{{ii.get_absolute_url}}">{{ii.title}}</a></h4>
+                                        <div class="row">
+                                            <div class="ed_rating">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                            <
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="course_detail">
+                                            <div class="course_faculty">
+                                                <img src="{% static  'assets/images/kidscamp/content/team_2.jpg' %}" alt=""> <a href="javascript:void(0);">{{ii.teacher_id.username}}</a>
+                                            </div>
+                                        </div>
+                                        <p>Project-Based Learning is a flexible tool for framing given academic standards into curriculum flexible tool for framing.</p>
+                                    {% if request.user.is_authenticated %}
+
+
+                                        {% if all_enrollmet %}
+                                        {% for mkli in all_enrollmet %}
+                                        {% if mkli.courses_id.id == ii.id %}
+                                            {% if  mkli.enrolled %}
+                                                    <form method="POST" action="{% url 'homepage:get_uninvolved' %}">
+                                                   
+                                                        {% csrf_token %}
+
+                                                        <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                        
+                                                        <button type="submit" class="btn btn-danger">Remove Enrollment</button>
+                                                    </form>
+
+
+                                            {% else %}
+                                                    <form method="POST" action="{% url 'homepage:get_involved' %}">
+                                                    
+                                                        {% csrf_token %}
+
+                                                        <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                        
+                                                        <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                    </form>
+                                        
+                                        
+                                        
+                                        
+                                        
+                                                {% endif %}
+
+
+
+                                        {% else %}
+                                        <form method="POST" action="{% url 'homepage:get_involved' %}">
+                                         
+                                                    {% csrf_token %}
+
+                                                    <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                    
+                                                    <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                </form>
+
+
+
+                                        
+                                        
+                                        {% endif %}
+
+                                        {% endfor %}
+
+                                            {% else %}
+
+                                            
+
+                                                <form method="POST" action="{% url 'homepage:get_involved' %}">
+                                             
+                                                    {% csrf_token %}
+
+                                                    <input name="course_id" type="hidden" value="{{ii.id}}" >
+                                                    
+                                                    <button type="submit" class="btn btn-success">Enroll Now</button>
+                                                </form>
+                                        
+                                        {% endif %}
+
+
+                                        
+                                        {% comment %} check enrolled user {% endcomment %}
+
+                                          
+                                   
+                                    {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+
+                       
+                   
+                            
+                           
+                            
+                            
+                            <div class="col-lg-12">
+                                <div class="ed_blog_bottom_pagination">
+                                    <nav>
+                                        <ul class="pagination">
+                                            <li><a href="javascript:void(0);">1</a></li>
+                                            <li><a href="javascript:void(0);">2</a></li>
+                                            <li><a href="javascript:void(0);">3</a></li>
+                                            <li class="active"><a href="javascript:void(0);">Next <span class="sr-only">(current)</span></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Sidebar Start-->
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                        <div class="sidebar_wrapper_upper">
+                            <div class="sidebar_wrapper">
+                                <aside class="widget widget_search">
+                                    <div class="input-group">
+                                        
+                                     
+								
+							</span>
+                                    </div>
+                                </aside>
+                                <aside class="widget widget_categories">
+                                    <h4 class="widget-title">course class Categories</h4>
+
+                                    <ul>
+                                    {% if all_classes %}
+                                    {% for mks in  all_classes %}
+                                    {% comment %} todo: go to specific course for that class {% endcomment %}
+                                        <li><a href="{{mks.get_absolute_url}}"><i class="fa fa-chevron-right"></i>{{mks.class_name}}</a></li>
+                                    {% endfor %} 
+                                    {% endif %}
+                                    </ul>
+                                </aside>
+                                
+                                
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <!--Sidebar End-->
+                </div>
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- Section eleven end -->

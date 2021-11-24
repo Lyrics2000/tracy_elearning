@@ -48,11 +48,16 @@
                                             
                                         </li>
                                      
+                                        {% if request.user.is_authenticated %}
+                                        {% if request.user.type == "Teacher" %}
+                                         <li><a href="{% url 'homepage:upload_class' %}">Upload Course</a></li>
                                         
-                                        <li><a href="contact.html">Contact us</a></li>
+                                        {% endif %}
+                                        {% endif %}
+                                       
                                     {% if request.user.is_authenticated %}
 
-                                    <li><a href="">Logout</a></li>
+                                    <li><a href="{% url 'account:logout' %}">Logout</a></li>
 
                                     {% else %}
                     

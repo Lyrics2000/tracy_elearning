@@ -1,5 +1,6 @@
 
 
+from os import name
 from django.urls import path
 from .views import (index,
 mainpage,
@@ -9,7 +10,13 @@ lesson,get_involved,
 get_uninvolved,
 CourseDetailView,
 LessonDetailView,
-courses_class_filter)
+courses_class_filter,
+upload_class,
+upload_class_category,
+upload_courses,
+single_lesson,
+lesson_upload_ff,
+lesson_file_upload)
 
 app_name = "homepage"
 
@@ -22,8 +29,14 @@ urlpatterns = [
     path('get_involved/',get_involved,name="get_involved"),
     path('get_uninvolved',get_uninvolved,name="get_uninvolved"),
     path('single_course/<slug>/',CourseDetailView.as_view(),name="single_course"),
-    path('single_lesson/<slug>/',LessonDetailView.as_view(),name="single_lesson"),
-    path('course_class_filter/<slug>/',courses_class_filter,name="course_class_filter")
+    path('single_lesson/<slug>/',single_lesson,name="single_lesson"),
+    path('course_class_filter/<slug>/',courses_class_filter,name="course_class_filter"),
+    path('upload_class/',upload_class,name="upload_class"),
+    path("class_category_upload/",upload_class_category, name="class_category_upload"),
+    path('upload_courses/',upload_courses,name="upload_courses"),
+    path('upload_lesson/',lesson_upload_ff,name="upload_lessons"),
+    path('upload_lesson_file/',lesson_file_upload,name="upload_lessons_file"),
+
 ]
 
 

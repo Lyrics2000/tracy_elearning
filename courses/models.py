@@ -37,14 +37,18 @@ class BaseModel(models.Model):
 # Create your models here.
 
 class Classes(BaseModel):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
     class_name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     slug = models.SlugField(max_length=255,unique=True,blank=True,null=True)
 
     def get_absolute_url(self):
         return reverse("homepage:course_class_filter", kwargs={
-            'slug': self.slug
+            'slug': self.id
         })
+
+    
+
 
 
     def __str__(self):
@@ -122,7 +126,7 @@ class Lessons(BaseModel):
 
     def get_absolute_url(self):
         return reverse("homepage:single_lesson", kwargs={
-            'slug': self.slug
+            'slug': self.id
         })
 
 
