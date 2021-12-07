@@ -1,0 +1,86 @@
+{% load static %}
+
+ <!-- Section eleven start -->
+        <div class="ed_courses ed_toppadder80 ed_bottompadder80 with-left-widgets">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8 col-sm-12">
+                        <div class="row">
+                          
+                          {% if enrolled %}
+                          {% for ii in enrolled %}
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="ed_mostrecomeded_course">
+                                    <div class="ed_item_img">
+                                        <img src="{{ii.courses_id.thumbnail.url}}" alt="item1" class="img-responsive">
+                                    </div>
+                                    <div class="ed_item_description ed_most_recomended_data">
+                                        <h4><a href="{{ii.courses_id.get_absolute_url}}">{{ii.courses_id.title}}</a></h4>
+                                        <div class="row">
+                                            <div class="ed_rating">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                           
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="course_detail">
+                                            <div class="course_faculty">
+                                                <img src="{% static  'assets/images/kidscamp/content/team_2.jpg' %}" alt=""> <a href="javascript:void(0);">{{ii.courses_id.teacher_id.username}}</a>
+                                            </div>
+                                        </div>
+                                        <p>Project-Based Learning is a flexible tool for framing given academic standards into curriculum flexible tool for framing.</p>
+                                                       </div>
+                                </div>
+                            </div>
+                      
+                        {% endfor %}
+                        {% endif %}
+
+                            <div class="col-lg-12">
+                                <div class="ed_blog_bottom_pagination">
+                                    <nav>
+                                        <ul class="pagination">
+                                            <li><a href="javascript:void(0);">1</a></li>
+                                            <li><a href="javascript:void(0);">2</a></li>
+                                            <li><a href="javascript:void(0);">3</a></li>
+                                            <li class="active"><a href="javascript:void(0);">Next <span class="sr-only">(current)</span></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Sidebar Start-->
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                        <div class="sidebar_wrapper_upper">
+                            <div class="sidebar_wrapper">
+                                <aside class="widget widget_search">
+                                    <div class="input-group">
+                                        
+                                     
+								
+							</span>
+                                    </div>
+                                </aside>
+                                
+                                
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <!--Sidebar End-->
+                </div>
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- Section eleven end -->

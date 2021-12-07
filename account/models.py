@@ -24,11 +24,21 @@ class User(AbstractUser):
     phone = models.CharField(null=True,max_length=255)
     type = models.CharField(null=True,max_length=255)
     
+    
     REQUIRED_FIELDS = ['username','phone','first_name','last_name','type']
     USERNAME_FIELD = 'email'
 
     def get_username(self):
         return self.email
+
+
+
+class ChildEmail(models.Model):
+    parent_id =  models.ForeignKey(User,on_delete=models.CASCADE)
+    child_email =  models.EmailField()
+
+    def __str__(self):
+        return self.child_email
 
 
 class Profile_pic(models.Model):

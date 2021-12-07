@@ -21,6 +21,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
+from account.models import ChildEmail
 
 # Create your views here.
 
@@ -384,6 +385,26 @@ def upload_assingment_file(request):
             email.send()
             return redirect("/")
     return render(request,'upload_lesson_assignment.html')
+
+
+
+def student_enrolled_parent(request):
+    user_id =  request.user.id
+    user_obj =  User.objects.get(id =  user_id)
+    child =  ChildEmail.objects.get(parent_id =  user_obj)
+    child_email = child.child_email
+
+    user_child =  User.objects.get(email =child_email)
+    enrolled_child = Enrolment.objects.filter(user_id =  user_child)
+    print(enrolled_child)
+
+
+    context = {
+        'enrolled':  enrolled_child
+    }
+
+
+    return render(request,'student_enrolled_class.html',context)
 
 
 

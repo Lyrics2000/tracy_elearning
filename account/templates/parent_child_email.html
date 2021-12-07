@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elearning</title>
+    <link rel="stylesheet" href="{% static './css/signin_signup/style.css' %}">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h2>Child Email</h2>
+        </div>
+        <form method="POST" action="{% url 'account:parent_child_email' %}" id="form" class="form">
+            {% csrf_token %}
+            
+            <div class="form-control">
+                <label for="username">Email</label>
+                <input name="email"  type="text"  placeholder="Enter childs email"  id="type"
+                required="">
+                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-exclamation-circle"></i>
+                <small>Error message</small>
+            </div>
+            <button>Submit</button>
+            
+        </form>
+    </div>
+    
+    
+    
+    
+</body>
+</html>

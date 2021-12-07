@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from .forms import SignINForm,SignUpForm
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 from account.models import User
 from django.contrib.auth import logout
@@ -15,6 +16,7 @@ from django.template.loader import render_to_string
 from .token import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
+from .models import ChildEmail
 
 # Create your views here.
 def logout_user(request):
@@ -132,10 +134,39 @@ def activate_account(request, uidb64, token):
         email = EmailMessage(email_subject, message, to=[to_email])
         email.send()
 
+        if user.type == "Parent":
+            print("Parent user",user.username)
+            return render(request,'parent_child_email.html')
+
+
+
         return HttpResponse('Your account has been activate successfully')
         
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+
+
+@login_required(login_url="account:sign_in")
+def parent_child_email(request):
+    if request.method == "POST":
+        email =  request.POST.get("email")
+        user = User.objects.get(email =  email)
+        if user.type == "Student":
+            user_now  =  request.user.id
+            user_obj = User.objects.get(id = user_now)
+            ms = ChildEmail.objects.create(
+                parent_id = user_obj,
+                child_email = user.email
+
+            )
+
+            return redirect("/")
+        return render(request,'parent_child_email.html')
+
+    return render(request,'parent_child_email.html')
+
     
 
     

@@ -17,7 +17,8 @@ upload_courses,
 single_lesson,
 lesson_upload_ff,
 lesson_file_upload,
-upload_assingment_file)
+upload_assingment_file,
+student_enrolled_parent)
 
 app_name = "homepage"
 
@@ -37,7 +38,8 @@ urlpatterns = [
     path('upload_courses/',upload_courses,name="upload_courses"),
     path('upload_lesson/',lesson_upload_ff,name="upload_lessons"),
     path('upload_lesson_file/',lesson_file_upload,name="upload_lessons_file"),
-    path('upload_assingment_file/',upload_assingment_file,name="upload_assingment_file")
+    path('upload_assingment_file/',upload_assingment_file,name="upload_assingment_file"),
+    path('student_enrolled_parent/',student_enrolled_parent,name="student_enrolled_parent")
 
 ]
 
