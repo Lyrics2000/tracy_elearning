@@ -1,6 +1,9 @@
 from django.db import models
 import os
 import random
+from account.models import User
+
+from courses.models import Lessons
 
 
 # Create your models here.
@@ -33,4 +36,5 @@ class AboutUs(models.Model):
 
     def __str__(self):
         return self.heading
+
 

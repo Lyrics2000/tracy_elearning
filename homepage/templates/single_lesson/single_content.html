@@ -57,29 +57,50 @@
                            
                                 <aside class="widget widget_categories">
                                     <h4 class="widget-title">Lessons Files</h4>
+                        
+                                    {% if object.paid %} 
+
                                     <ul>
-                                    {% if lesson_files %}
-                                  
-                                    {% for lsf in lesson_files %}
-                                
-                                    {% if lsf.lesson.id == object.id %}
+                                        {% if lesson_files %}
+                                      
+                                        {% for lsf in lesson_files %}
                                     
-                                        <li><a href="{{lsf.zip_file_upload.url}}"><i class="fa fa-chevron-right"></i>{{lsf.file_name}}</a></li>
-                                 
-                                        {% endif %}
+                                        {% if lsf.lesson.id == object.id %}
                                         
-                                        {% endfor %}
+                                            <li><a href="{{lsf.zip_file_upload.url}}"><i class="fa fa-chevron-right"></i>{{lsf.file_name}}</a></li>
+                                     
+                                            {% endif %}
+                                            
+                                            {% endfor %}
+    
+                                        
+    
+                                        
+                                        {% endif %}
+                              
+                                        </ul>
 
-                                    
+                                    {% else %}  
 
+                                    <form method="POST" action="{% url 'mpesa:lipa_na_mpesa' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                          <input type="hidden" name="lesson_id" value="{{object.id}}">
+                                          <input type="tel" class="form-control" name="phone" id="exampleInputEmail1"  placeholder="Safaricom Number">
+                                          <small id="emailHelp" class="form-text text-muted">Pay to access.</small>
+                                        </div>
                                     
+                                    
+                                        <button type="submit" class="btn btn-primary">Pay</button>
+                                      </form>
+
                                     {% endif %}
-                          
-                                    </ul>
+                                    
                                 </aside>
 
                                 <aside class="widget widget_sharing">
                                     <h4 class="widget-title">Lessions Assignment</h4>
+                                   
                                     <ul>
                                     {% if assignemt_files %}
                                     {% for ass in assignemt_files %}

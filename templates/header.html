@@ -56,6 +56,13 @@
                                         {% endif %}
                                        
 
+                                        {% if request.user.is_authenticated %}
+                                        {% if request.user.type == "Student" %}
+                                         <li><a href="{% url 'homepage:courses_recommendations' %}">Courses Recommendations</a></li>
+                                        
+                                        {% endif %}
+                                        {% endif %}
+
                                     
                                         {% if request.user.is_authenticated %}
                                         {% if request.user.type == "Parent" %}

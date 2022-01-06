@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'homepage',
-    'courses'
+    'courses',
+    'payments'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ TEMPLATES = [
         'DIRS': [
         os.path.join(BASE_DIR,'homepage/templates'),
         os.path.join(BASE_DIR,'auth/templates'),
+        os.path.join(BASE_DIR,'payments/templates'),
         os.path.join(BASE_DIR/'templates')
  ],
         'APP_DIRS': True,

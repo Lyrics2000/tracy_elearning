@@ -36,6 +36,7 @@
                                         <li role="presentation"><a href="#students" aria-controls="students" role="tab" data-bs-toggle="tab">students</a></li>
                                         <li role="presentation"><a href="#news" aria-controls="news" role="tab" data-bs-toggle="tab">Full Description</a></li>
                                         <li role="presentation"><a href="#events" aria-controls="events" role="tab" data-bs-toggle="tab">Language</a></li>
+                                        <li role="presentation"><a href="#rate" aria-controls="rate" role="tab" data-bs-toggle="tab">Rate</a></li>
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content">
@@ -99,6 +100,28 @@
                                                 <h2>Course Language</h2>
                                                 <p style="color:black;">{{object.language}}</p>
                                                 
+                                                <!--tab End-->
+                                            </div>
+                                        </div>
+
+
+                                        <div role="tabpanel" class="tab-pane" id="rate">
+                                            <div class="ed_course_single_info">
+                                                <h2>Rate Course</h2>
+                                                <form method="POST" action="{% url 'homepage:rattings' %}">
+                                                    {% csrf_token %}
+                                                    <input name="course_id" type="hidden" value="{{object.id}}">
+                                                    <select name="ratting" class="form-select" aria-label="Default select example">
+                                                        
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                      </select>
+
+                                                      <button type="submit" class="btn btn-success">Submit</button>
+                                                </form>
                                                 <!--tab End-->
                                             </div>
                                         </div>

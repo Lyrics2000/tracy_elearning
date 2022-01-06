@@ -2,7 +2,10 @@ from django.core.validators import slug_re
 from django.shortcuts import redirect, render
 from account.models import User
 from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect
 import uuid
+from sklearn.neighbors import NearestNeighbors
+from django.http import Http404
 
 from .models import (ScrollingIMages,
 AboutUs)
@@ -11,8 +14,10 @@ from courses.models import (ClassCategory, Courses,Enrolment,
 Classes,
 Lessons,
 LessonFiles,
-LessonAssignmentFiles
+LessonAssignmentFiles,
+Ratting
 )
+from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView,View,ListView
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -23,6 +28,12 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from account.models import ChildEmail
 
+
+# machine learning recommendation
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
 # Create your views here.
 
 def index(request):
@@ -32,7 +43,8 @@ def index(request):
         images =  ScrollingIMages.objects.all()
         about =  AboutUs.objects.all()
         all_courses = Courses.objects.all()
-        all_enrolment =  Enrolment.objects.all()
+        all_enrolment =  Enrolment.objects.filter(user_id = user_obj)
+        print(all_enrolment)
         profile_pic =  Profile_pic.objects.all()
 
         context ={
@@ -83,7 +95,7 @@ def courses(request):
         user_type = dict_user['type']
         courses =  Courses.objects.all()
         all_users =  User.objects.all()
-        all_enrolment =  Enrolment.objects.all()
+        all_enrolment =  Enrolment.objects.filter(user_id = obj)
         all_classes =  Classes.objects.all()
 
         context = {
@@ -103,7 +115,6 @@ def courses(request):
         all_classes =  Classes.objects.all()
       
         all_users =  User.objects.all()
-        all_enrolment =  Enrolment.objects.all()
         all_classes =  Classes.objects.all()
         context = {
             'courses' :  courses,
@@ -408,6 +419,187 @@ def student_enrolled_parent(request):
 
 
 
+
+
+
+def courses_recommeondations(request):
+    user_id =  request.user.id
+    user_obj  = User.objects.all()
+    courses =  Courses.objects.all()
+    df = pd.DataFrame(np.zeros(shape=(len(user_obj),len(courses))))
+    print(str(df))
+    col_names = []
+    row_names = []
+    for u  in courses:
+        col_names.append(u.id)
+    print(col_names)
+
+    for lk in user_obj:
+        row_names.append(lk.id)
+    print(row_names)
+
+    df.columns = col_names
+    df.index = row_names
+
+    print(df)
+   
+   
+    for m in user_obj:
+        for l in courses:
+            course_obj =  Courses.objects.get(id =  l.id)
+            user_obj =  User.objects.get(id =  m.id)
+            try:
+                rete =  Ratting.objects.get(courses_id_id =  l.id,user_id_id =  m.id)
+                print("mkk",df.at[m.id,l.id])
+                df.at[m.id,l.id] = rete.ratting
+                print(rete.ratting)
+                
+            except Ratting.DoesNotExist:
+                pass
+
+    
+    print(df)
+    # calculating nearest neighbors
+    # transposing the dataframe
+    df1 = df.T
+    df2 = df.T
+    
+    # find the nearest neighbors using NearestNeighbors(n_neighbors=3)
+    number_neighbors = 3
+    knn = NearestNeighbors(metric='cosine', algorithm='brute')
+    knn.fit(df1.values)
+    distances, indices = knn.kneighbors(df1.values, n_neighbors=number_neighbors)
+    # convert user_name to user_index
+    user_index = df1.columns.tolist().index(request.user.id)
+    print(user_index)
+
+    # t: courses_title, m: the row number of t in df1
+    for m,t in list(enumerate(df1.index)):
+        # find course without ratings by user
+        
+
+        if df1.iloc[m, user_index] == 0:
+            sim_course = indices[m].tolist()
+            course_distances = distances[m].tolist()
+
+        # Generally, this is the case: indices[3] = [3 6 7]. The course itself is in the first place.
+        # In this case, we take off 3 from the list. Then, indices[3] == [6 7] to have the nearest NEIGHBORS in the list. 
+        if m in sim_course:
+            id_course = sim_course.index(m)
+            sim_course.remove(m)
+            course_distances.pop(id_course)
+        # However, if the percentage of ratings in the dataset is very low, there are too many 0s in the dataset. 
+        # Some courses have all 0 ratings and the courses with all 0s are considered the same courses by NearestNeighbors(). 
+        # Then,even the course itself cannot be included in the indices. 
+        # For example, indices[3] = [2 4 7] is possible if course_2, course_3, course_4, and course_7 have all 0s for their ratings.
+        # In that case, we take off the farthest course in the list. Therefore, 7 is taken off from the list, then indices[3] == [2 4].
+        else:
+            sim_course = sim_course[:number_neighbors-1]
+            course_distances = course_distances[:number_neighbors-1]
+
+
+        # course_similarty = 1 - course_distance    
+        course_similarity = [1-x for x in course_distances]
+        course_similarity_copy = course_similarity.copy()
+        nominator = 0
+
+         # for each similar course
+        for s in range(0, len(course_similarity)):
+            # check if the rating of a similar course is zero
+            if df1.iloc[sim_course[s], user_index] == 0:
+                # if the rating is zero, ignore the rating and the similarity in calculating the predicted rating
+                if len(course_similarity_copy) == (number_neighbors - 1):
+                    course_similarity_copy.pop(s)
+                else:
+                    course_similarity_copy.pop(s-(len(course_similarity)-len(course_similarity_copy)))
+
+            # if the rating is not zero, use the rating and similarity in the calculation
+            else:
+                nominator = nominator + course_similarity[s]*df.iloc[sim_course[s],user_index]
+
+            # check if the number of the ratings with non-zero is positive
+            if len(course_similarity_copy) > 0:
+                # check if the sum of the ratings of the similar courses is positive.
+                if sum(course_similarity_copy) > 0:
+                    predicted_r = nominator/sum(course_similarity_copy)
+
+                # Even if there are some courses for which the ratings are positive, some courses have zero similarity even though they are selected as similar courses.
+                # in this case, the predicted rating becomes zero as well  
+                else:
+                    predicted_r = 0
+            # if all the ratings of the similar courses are zero, then predicted rating should be zero
+            else:
+                predicted_r = 0
+
+            # place the predicted rating into the copy of the original dataset
+            df2.iloc[m,user_index] = predicted_r
+
+
+        def recommend_course(user, num_recommended_courses):
+            print('The list of the course {} Has Watched \n'.format(user))
+
+            for m in df1[df1[user] > 0][user].index.tolist():
+                print(m)
+
+            print('\n')
+
+            recommended_course = []
+            cours_m = []
+            for m in df1[df1[user] == 0].index.tolist():
+
+                index_df = df1.index.tolist().index(m)
+                predicted_rating = df1.iloc[index_df, df1.columns.tolist().index(user)]
+                print(",,,",m)
+                recommended_course.append((m, predicted_rating))
+                
+
+            sorted_rm = sorted(recommended_course, key=lambda x:x[1], reverse=True)
+            print('The list of the Recommended course \n')
+            rank = 1
+            for recommended_course in sorted_rm[:num_recommended_courses]:
+                print('{}: {} - predicted rating:{}'.format(rank, recommended_course[0], recommended_course[1]))
+                rank = rank + 1
+
+            return sorted_rm
+
+        
+        recs = recommend_course(request.user.id, len(courses))
+        print("mksi",recs)
+        course_idds = []
+        for k in recs:
+            cour = Courses.objects.get(id = int(k[0]))
+            course_idds.append(cour)
+
+        all_classes =  Classes.objects.all()
+        
+        context = {
+            'courses':course_idds,
+            'all_classes':all_classes
+        }
+        print(course_idds)
+         
+
+            
+        
+    # combine a value of important search names to a string
+    
+    return render(request,'recommendations.html',context)
+
+
+
+@login_required(login_url="account:sign_in")
+def rattings(request):
+    if request.method  == "POST":
+        user_id =  request.user.id
+        user_obj =  User.objects.get(id = user_id)
+        course_id =  request.POST.get("course_id")
+        course_obj =  Courses.objects.get(id =  int(course_id))
+        ratting =  request.POST.get("ratting")
+        print("ratting : ",ratting)
+        obj,created = Ratting.objects.get_or_create(courses_id = course_obj,user_id =  user_obj)
+        obj.ratting = ratting
+        obj.save()
+        return HttpResponseRedirect(f'/single_course/{course_obj.slug}/')
 
     
 

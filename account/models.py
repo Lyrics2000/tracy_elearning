@@ -32,7 +32,6 @@ class User(AbstractUser):
         return self.email
 
 
-
 class ChildEmail(models.Model):
     parent_id =  models.ForeignKey(User,on_delete=models.CASCADE)
     child_email =  models.EmailField()

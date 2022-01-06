@@ -113,6 +113,18 @@ class Enrolment(BaseModel):
         return str(self.courses_id)
 
 
+class Ratting(BaseModel):
+    courses_id = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    ratting = models.CharField(max_length=255)
+
+
+    def __str__(self):
+        return str(self.courses_id)
+
+
+
+
 class Lessons(BaseModel):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=100)
@@ -120,6 +132,7 @@ class Lessons(BaseModel):
     lesson_body =  models.TextField(blank=True,null=True)
     video_url = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255,unique=True,null=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.title
